@@ -47,9 +47,22 @@ cd Twitter_follower_war
 npm i -d
 ```
 
-##### Configure Credentials in the following files
+##### To configure Credentials create a file at the root called ./credentials.js and of course enter your keys
 
-* TDB
+```js
+module.exports = {
+	twitter:{
+		consumer_key: '',
+		consumer_secret: '',
+		access_token_key: '',
+		access_token_secret: ''
+	},
+	mailjet:{
+		apikey : '',
+		apikeysecret : ''
+	}
+}
+```
 
 ```sh
 node app
