@@ -1,6 +1,8 @@
 Twitter Follower War 
 =========
 
+The follower war is small follower challenge with monitoring an reporting.
+
 Follower war was a little challenge with a friend [Charles Collas], which was to do a race followers. We had follower of departure and the matter was to see the biggest increase in a month. Here is what you have in this repo.
 
   - An backend script which monitors followers with thw [twitter API] and [Node.js]
