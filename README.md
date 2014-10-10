@@ -14,6 +14,16 @@ Version
 
 0.1 *In development*
 
+Status
+----
+
+  - 0.1 Creation of back
+  - 0.2 Link with front + socket.io
+  - 0.4 Link with twitter API
+  - 0.6 Link with MangoDB
+  - 0.8 Link with Mailjet
+  - 1.0 First version
+
 Tech
 -----------
 
@@ -35,11 +45,9 @@ cd Twitter_follower_war
 npm i -d
 ```
 
-##### Configure Credentials. Instructions in following README.md files
+##### Configure Credentials in the following files
 
-* libs/mailjet/README.md
-* libs/mangoDB/README.md
-* libs/twitterAPI/README.md
+* TDB
 
 ```sh
 node app
