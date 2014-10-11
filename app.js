@@ -54,7 +54,7 @@ stream.on('data', function(json) {
 			name : json.target.name,
 			img : json.target.profile_image_url,
 			count : json.target.followers_count,
-			progress : json.target.followers_count,
+			progress : progress,
 			date : moment().format('MMMM Do YYYY, hh:mm:ss')
 		});
 

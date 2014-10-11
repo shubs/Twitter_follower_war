@@ -24,26 +24,52 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
 
 
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <script src="https://cdn.firebase.com/js/client/1.1.1/firebase.js"></script>
 
   	<script>
-      // Get a reference to our posts
-      var postsRef = new Firebase("https://twitterwar.firebaseio.com/you");
-
-      // Retrieve new posts as they are added to Firebase
-      postsRef.on('child_added', function (snapshot) {
-        var newPost = snapshot.val() ;
+      function update(newPost, who){
+        $("#"+who+"_img").attr("src",newPost.img);
+        $("#"+who+"_fcount").html(newPost.count);
+        $("#"+who+"_state").html("+ "+newPost.progress);
+        $("#"+who+"_id").html("@"+newPost.screen_name);
         console.log(newPost);
-        console.log("YOUUUUUUU");
-      });
+      }
 
-      var postsRef2 = new Firebase("https://twitterwar.firebaseio.com/competitor");
+      function check_winner(){
+        if ($("#competitor_state").val() < $("#you_state").val()) {
+          $("#btn_you_state").addClass('btn-success');
+          $("#btn_competitor_state").addClass('btn-danger');
+        }
+        else{
+          $("#btn_you_state").addClass('btn-danger');
+          $("#btn_competitor_state").addClass('btn-success');
+        };
+        
+        if ($("#competitor_fcount").val() < $("#you_fcount").val()) {
+          $("#btn_you_count").addClass('btn-success');
+          $("#btn_competitor_count").addClass('btn-danger');
+        }
+        else{
+          $("#btn_you_count").addClass('btn-danger');
+          $("#btn_competitor_count").addClass('btn-success');
+        };
+      }
 
-      // Attach an asynchronous callback to read the data at our posts reference
-      postsRef2.on('child_added', function (snapshot) {
-        var newPost = snapshot.val() ;
-        console.log(newPost);
-        console.log("COMPPPPPPPP");
+      $(document).ready(function() {
+        var postsRef = new Firebase("https://twitterwar.firebaseio.com/you");
+        postsRef.on('child_added', function (snapshot) {
+          var newPost = snapshot.val();
+          update(newPost, "you");
+        });
+
+        var postsRef2 = new Firebase("https://twitterwar.firebaseio.com/competitor");
+        postsRef2.on('child_added', function (snapshot) {
+          var newPost = snapshot.val();
+          update(newPost, "competitor");
+        });
+      check_winner();
+
       });
   	</script>
   </head>
@@ -78,26 +104,20 @@
         
         <div class="row">
           <div class="col-md-6">
-            <p class="lead" id="you_id">__</p>
+            <h2 class="lead" id="you_id">__</h2>
             <img class="avatarImage" id="you_img" src="https://pbs.twimg.com/profile_images/2284174758/v65oai7fxn47qv9nectx_reasonably_small.png">
-            <p id="you_fcount">Followers : __ </p>
-            <p id="you_state">State : __ </p>
+            <button id="btn_you_count" type="button" class="btn">Followers : <span id="you_fcount">__</span></button>
+            <button id="btn_you_state" type="button" class="btn">State : <span id="you_state">__</span></button>
           </div>
           <div class="col-md-6">
-            <p class="lead" id="comp_id">__</p>
-            <img class="avatarImage" id="comp_img" src="https://pbs.twimg.com/profile_images/2284174758/v65oai7fxn47qv9nectx_reasonably_small.png">
-            <p id="comp_fcount">Followers : __ </p>
-            <p id="comp_state">State : __ </p>
+            <h2 class="lead" id="competitor_id">__</h2>
+            <img class="avatarImage" id="competitor_img" src="https://pbs.twimg.com/profile_images/2284174758/v65oai7fxn47qv9nectx_reasonably_small.png">
+            <button id="btn_competitor_count" type="button" class="btn">Followers : <span id="competitor_fcount">__</span></button>
+            <button id="btn_competitor_state" type="button" class="btn">State : <span id="competitor_state">__</span></button>
           </div>
         </div>
       </div>
 
     </div><!-- /.container -->
-
-
-    <!-- Bootstrap core JavaScript
-    ================================================== -->
-    <!-- Placed at the end of the document so the pages load faster -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 </body>
 </html>
