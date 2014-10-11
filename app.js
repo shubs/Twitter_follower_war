@@ -1,28 +1,8 @@
 var app = require('express')();
 var http = require('http').Server(app);
 var http_for_time = require('http');
-var io = require('socket.io')(http);
 
-
-// Inclusion of Mongoose
-var mongoose = require('mongoose');
-// So we connect to the DB
-// do not forget to run ~/mongodb/bin/mongod in a seperate shell !
-mongoose.connect('mongodb://localhost/twiiter', function(err) {
-  if (err) { throw err; }
-});
- 
-// Creation of a schema pour every change
-var twiiter_log = new mongoose.Schema({
-  screen_name : String,
-  name : String,
-  img : String,
-  count : Number,
-  date : { type : Date, default : Date.now }
-});
-
-// Creation of the model
-var log_model = mongoose.model('log_model', twiiter_log);
+var moment = require('moment');
 
 var credentials = require('./credentials.js');
 
@@ -32,30 +12,29 @@ var params = {
     with: 'shub_s' // The id of your competitor :)
 }
 
+var Firebase = require("firebase");
+var myFirebaseRef = new Firebase("https://twitterwar.firebaseio.com/");
+
 // create the twitter stream
 stream.stream(params);
 
 //listen stream data
 stream.on('data', function(json) {
-
 	//here traking when someone followes hi,
 	if ((typeof json.event != 'undefined') && (json.event == 'follow')) {
-		
 		console.log(params.with + " was followed by " + json.source.name + " he now has " + json.target.followers_count + " followers !");
-
-		// Creation of instance of the model
-		var log = new log_model({
+	
+		
+		myFirebaseRef.push({
 			screen_name : json.source.screen_name,
 			name : json.source.name,
 			img : json.source.profile_image_url,
-			count : json.target.followers_count
-		});
-		// Saving stuff
-		log.save(function (err) {
-		  if (err) { throw err; }
-		  console.log('logged line !');
+			count : json.target.followers_count,
+			date : moment().format('MMMM Do YYYY, hh:mm:ss')
 		});
 	};
+
+
 });
 
 stream.on('connected', function(json) {

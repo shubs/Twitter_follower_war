@@ -24,12 +24,12 @@
   },
   "devDependencies": {
     "express": "^4.9.7",
+    "firebase": "^1.1.1",
     "grunt": "~0.4.5",
     "grunt-contrib-jshint": "~0.6.4",
     "grunt-contrib-nodeunit": "~0.2.0",
     "grunt-contrib-watch": "~0.5.3",
-    "mongoose": "^3.8.17",
-    "socket.io": "^1.1.0",
+    "moment": "^2.8.3",
     "user-stream": "0.0.7"
   },
   "keywords": []
