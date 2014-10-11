@@ -13,7 +13,7 @@ Follower war was a little challenge with a friend [Charles Collas], which was to
 Version
 ----
 
-0.4 *In development*
+0.7 *In development*
 
 Status
 ----
