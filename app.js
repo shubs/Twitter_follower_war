@@ -14,7 +14,9 @@ mongoose.connect('mongodb://localhost/twiiter', function(err) {
  
 // Creation of a schema pour every change
 var twiiter_log = new mongoose.Schema({
-  follower_name : String,
+  screen_name : String,
+  name : String,
+  img : String,
   count : Number,
   date : { type : Date, default : Date.now }
 });
@@ -39,11 +41,13 @@ stream.on('data', function(json) {
 	//here traking when someone followes hi,
 	if ((typeof json.event != 'undefined') && (json.event == 'follow')) {
 		
-		console.log(params.with + " was followed by " + json.source.name + " he now has " + json.target.followers_count + " followers");
+		console.log(params.with + " was followed by " + json.source.name + " he now has " + json.target.followers_count + " followers !");
 
 		// Creation of instance of the model
 		var log = new log_model({
-			follower_name : json.source.name,
+			screen_name : json.source.screen_name,
+			name : json.source.name,
+			img : json.source.profile_image_url,
 			count : json.target.followers_count
 		});
 		// Saving stuff
