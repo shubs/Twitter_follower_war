@@ -14,7 +14,7 @@ Follower war was a little challenge with a friend [Charles Collas], which was to
 Version
 ----
 
-0.1 *In development*
+0.4 *In development*
 
 Status
 ----
@@ -46,6 +46,7 @@ git clone [git-repo-url] Twitter_follower_war
 cd Twitter_follower_war
 npm i -d
 ```
+TDB GRUNT + MANGODB install
 
 ##### To configure Credentials create a file at the root called ./credentials.js and of course enter your keys
 
@@ -64,9 +65,12 @@ module.exports = {
 }
 ```
 
+Usage
+--------------
 ```sh
 node app
 ```
+And check [localhost]
 
 
 **Mmmmmh Enjoy and Please send me an [Email] if you need assistance or further information on this ;).**
@@ -79,3 +83,4 @@ node app
 [Node.js]:http://nodejs.org
 [Twitter Bootstrap]:http://twitter.github.com/bootstrap/
 [Email]:mailto:shubham@sharma.fr
+[localhost]:http://localhost/
