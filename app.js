@@ -1,57 +1,68 @@
-var app = require('express')();
-var http = require('http').Server(app);
-var http_for_time = require('http');
-
-var moment = require('moment');
-
+// This file have to be created in the root folder to specify your twitter and mailjet credentials
 var credentials = require('./credentials.js');
 
-var Twitter_stream = require('user-stream');
-var stream = new Twitter_stream(credentials.twitter);
+// We need Express and http to use this app as a server
+var app = require('express')();
+var http = require('http').Server(app);
 
-//importing cron for sending daily digest by mailjet
+// importing moment module for time handling
+var moment = require('moment');
+
+// importing cron for sending daily digest by mailjet
 var CronJob = require('cron').CronJob;
 
-//importing mailjet node module
+//importing mailjet node module to send those emails
 var Mailjet = require('mailjet-sendemail');
 var mj = new Mailjet(credentials.mailjet.apikey, credentials.mailjet.apikeysecret);
 
-var your_account = 'shub_s';
-var your_account_initial_count = 408;
-var competitor_account = 'CharlesCollas';
-var competitor_account_initial_count = 318;
+// Using the Twitter streaming API and setting it up using the credentials
+var Twitter_stream = require('user-stream');
+var stream = new Twitter_stream(credentials.twitter);
+
+// competition data import (to specify in ./competition.js)
+var competition = require('./competition.js');
 
 var params = {
-    with: your_account + ', ' + competitor_account // The id of your competitors and you :)
+    with: competition.you.account + ', ' + competition.competitor.account // The id of your competitors and you :)
 }
 
+// Connetion with firebase
 var Firebase = require("firebase");
 var myFirebaseRef = new Firebase("https://twitterwar.firebaseio.com/");
 
 // create the twitter stream
 stream.stream(params);
 
-//listen stream data
+// just war us when we are connected to the twitter API
+stream.on('connected', function(json) {
+  console.log("Twitter user connected");
+});
+
+//listen stream data when twitter sends something
 stream.on('data', function(json) {
 
-	//here traking when someone followes hi,
+	//here traking when someone followes someone,
 	if ((typeof json.event != 'undefined') && (json.event == 'follow')) {
 			
 		console.log(json.target.screen_name + " was followed by " + json.source.name + " -> Count : " + json.target.followers_count + " followers !");
 		
+		// this is the name of the node in the firebase DB
 		var node_name = "";
+
+		// this is the difference between the count and the initial count
 		var progress = 0;
 
-		if (json.target.screen_name == your_account) {
+		if (json.target.screen_name == competition.you.account) {
 			node_name = "you";
-			progress = json.target.followers_count - your_account_initial_count;
+			progress = json.target.followers_count - competition.you.initial_count;
 		};
 
-		if (json.target.screen_name == competitor_account) {
+		if (json.target.screen_name == competition.competitor.account) {
 			node_name = "competitor";
-			progress = json.target.followers_count - competitor_account_initial_count;
+			progress = json.target.followers_count - competition.competitor.initial_count;
 		};
 
+		// here pushing data in firebase
 		var postsRef = myFirebaseRef.child(node_name);
 		postsRef.push({
 			follower_screen_name : json.source.screen_name,
@@ -70,6 +81,7 @@ stream.on('data', function(json) {
 
 });
 
+// function creating and sending the digest email
 function send_my_digest(content){
 	mailjet.sendContent('TwitterWar@sharma.fr',
          ['shubham@sharma.fr'],
@@ -78,15 +90,11 @@ function send_my_digest(content){
          1)
 }
 
-//sends an email at midnight every day
+//Cron job which sends an email at midnight every day
 new CronJob('0 0 * * * *', function(){
     console.log('--------> Sending digest');
     send_my_digest("some html");
 }, null, true, "Europe/Paris");
-
-stream.on('connected', function(json) {
-  console.log("Twitter user connected");
-});
 
 app.get('/', function(req, res){
   res.sendfile('front/index.html');
