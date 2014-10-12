@@ -21,8 +21,8 @@ Status
   - 0.1 Creation of back
   - 0.2 Link with front
   - 0.4 Link with twitter API
-  - 0.6 Link with Firebase
-  - 0.8 Link with Mailjet
+  - 0.7 Link with Firebase
+  - 0.9 Link with Mailjet
   - 1.0 First version
 
 Tech
