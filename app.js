@@ -9,6 +9,13 @@ var credentials = require('./credentials.js');
 var Twitter_stream = require('user-stream');
 var stream = new Twitter_stream(credentials.twitter);
 
+//importing cron for sending daily digest by mailjet
+var CronJob = require('cron').CronJob;
+
+//importing mailjet node module
+var Mailjet = require('mailjet-sendemail');
+var mj = new Mailjet(credentials.mailjet.apikey, credentials.mailjet.apikeysecret);
+
 var your_account = 'shub_s';
 var your_account_initial_count = 408;
 var competitor_account = 'CharlesCollas';
@@ -62,6 +69,20 @@ stream.on('data', function(json) {
 	};
 
 });
+
+function send_my_digest(content){
+	mailjet.sendContent('TwitterWar@sharma.fr',
+         ['shubham@sharma.fr'],
+         'Twitter War - '+ moment().format('MMMM Do YYYY, hh:mm:ss'),
+         content,
+         1)
+}
+
+//sends an email at midnight every day
+new CronJob('0 0 * * * *', function(){
+    console.log('--------> Sending digest');
+    send_my_digest("some html");
+}, null, true, "Europe/Paris");
 
 stream.on('connected', function(json) {
   console.log("Twitter user connected");
