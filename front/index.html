@@ -33,6 +33,7 @@
         $("#"+who+"_fcount").html(newPost.count);
         $("#"+who+"_state").html("+ "+newPost.progress);
         $("#"+who+"_id").html("@"+newPost.screen_name);
+        $("#"+who+"_statuses_count").html(newPost.statuses_count);
         console.log(newPost);
       }
 
@@ -44,15 +45,6 @@
         else{
           $("#btn_you_state").addClass('btn-danger');
           $("#btn_competitor_state").addClass('btn-success');
-        };
-        
-        if ($("#competitor_fcount").val() < $("#you_fcount").val()) {
-          $("#btn_you_count").addClass('btn-success');
-          $("#btn_competitor_count").addClass('btn-danger');
-        }
-        else{
-          $("#btn_you_count").addClass('btn-danger');
-          $("#btn_competitor_count").addClass('btn-success');
         };
       }
 
@@ -68,7 +60,7 @@
           var newPost = snapshot.val();
           update(newPost, "competitor");
         });
-      check_winner();
+        check_winner();
 
       });
   	</script>
@@ -106,12 +98,14 @@
           <div class="col-md-6">
             <h2 class="lead" id="you_id">__</h2>
             <img class="avatarImage" id="you_img" src="https://pbs.twimg.com/profile_images/2284174758/v65oai7fxn47qv9nectx_reasonably_small.png">
+            <button id="btn_you_statuses_count" type="button" class="btn">Nb tweets : <span id="you_statuses_count">__</span></button>
             <button id="btn_you_count" type="button" class="btn">Followers : <span id="you_fcount">__</span></button>
             <button id="btn_you_state" type="button" class="btn">State : <span id="you_state">__</span></button>
           </div>
           <div class="col-md-6">
             <h2 class="lead" id="competitor_id">__</h2>
             <img class="avatarImage" id="competitor_img" src="https://pbs.twimg.com/profile_images/2284174758/v65oai7fxn47qv9nectx_reasonably_small.png">
+            <button id="btn_competitor_statuses_count" type="button" class="btn">Nb tweets : <span id="competitor_statuses_count">__</span></button>
             <button id="btn_competitor_count" type="button" class="btn">Followers : <span id="competitor_fcount">__</span></button>
             <button id="btn_competitor_state" type="button" class="btn">State : <span id="competitor_state">__</span></button>
           </div>
