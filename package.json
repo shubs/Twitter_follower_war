@@ -20,7 +20,8 @@
     "node": ">= 0.8.0"
   },
   "scripts": {
-    "test": "grunt nodeunit"
+    "test": "grunt nodeunit",
+    "start": "node app"
   },
   "devDependencies": {
     "cron": "^1.0.5",
@@ -30,8 +31,12 @@
     "grunt-contrib-jshint": "~0.6.4",
     "grunt-contrib-nodeunit": "~0.2.0",
     "grunt-contrib-watch": "~0.5.3",
+    "install": "^0.1.7",
     "mailjet-sendemail": "^1.1.1",
     "moment": "^2.8.3",
+    "npm": "^2.1.3",
+    "sleep": "^1.1.8",
+    "twit": "^1.1.18",
     "user-stream": "0.0.7"
   },
   "keywords": []

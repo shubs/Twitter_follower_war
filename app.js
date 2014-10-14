@@ -15,79 +15,63 @@ var CronJob = require('cron').CronJob;
 var Mailjet = require('mailjet-sendemail');
 var mj = new Mailjet(credentials.mailjet.apikey, credentials.mailjet.apikeysecret);
 
-// Using the Twitter streaming API and setting it up using the credentials
-var Twitter_stream = require('user-stream');
-var stream = new Twitter_stream(credentials.twitter);
+// Using the Twitter REST API and setting it up using the credentials
+// var util = require('util'),
+//     twitter = require('twitter');
+// var twit = new twitter(credentials.twitter);
+var Twit = require('twit');
+var T = new Twit({
+		consumer_key: 'BsbTj5MCLeTaUFATZrRlVmmSj',
+		consumer_secret: 'ygf8eXWlQrWLigkOJAG7lFc1QkgTGU7Wwoh4ZJxYABrSprLyl1',
+		access_token: '39555082-JIlybB8E7KOG5RIXfSrEmpmIzV417lDK8CdTqvBw1',
+		access_token_secret: 'TIFGj8ZeZQLxFikdmAxtOuSV5uptYCHjtf8hkCHxwkK6b'
+});
+//
+//  tweet 'hello world!'
+//
 
 // competition data import (to specify in ./competition.js)
 var competition = require('./competition.js');
-
-var params = {
-    with: competition.you.account + ', ' + competition.competitor.account // The id of your competitors and you :)
-}
 
 // Connetion with firebase
 var Firebase = require("firebase");
 var myFirebaseRef = new Firebase("https://twitterwar.firebaseio.com/");
 
-// create the twitter stream
-stream.stream(params);
+var users = competition.you.account + ',' + competition.competitor.account;
 
-// just war us when we are connected to the twitter API
-stream.on('connected', function(json) {
-  console.log("Twitter user connected");
-});
+T.get('users/lookup', { screen_name: users },  function (err, data, response) {
 
-//listen stream data when twitter sends something
-stream.on('data', function(json) {
-
-	//here traking when someone followes someone,
-	if ((typeof json.event != 'undefined') && (json.event == 'follow')) {
-			
-		console.log(json.target.screen_name + " was followed by " + json.source.name + " -> Count : " + json.target.followers_count + " followers !");
-		
-		// this is the name of the node in the firebase DB
-		var node_name = "";
-
-		// this is the difference between the count and the initial count
-		var progress = 0;
-
-		if (json.target.screen_name == competition.you.account) {
-			node_name = "you";
-			progress = json.target.followers_count - competition.you.initial_count;
-		};
-
-		if (json.target.screen_name == competition.competitor.account) {
-			node_name = "competitor";
-			progress = json.target.followers_count - competition.competitor.initial_count;
-		};
-
-		// here pushing data in firebase
-		var postsRef = myFirebaseRef.child(node_name);
-		postsRef.push({
-			follower_screen_name : json.source.screen_name,
-			follower_name : json.source.name,
-			follower_img : json.source.profile_image_url,
-			screen_name : json.target.screen_name,
-			name : json.target.name,
-			img : json.target.profile_image_url,
-			count : json.target.followers_count,
-			progress : progress,
-			statuses_count : json.target.statuses_count,
-			date : moment().format('MMMM Do YYYY, hh:mm:ss')
-		});
-
+	var res = {
+		competitor_screen_name : data[1].screen_name,
+		competitor_name : data[1].name,
+		competitor_img : data[1].profile_image_url,
+		competitor_count : data[1].followers_count,
+		competitor_statuses_count : data[1].statuses_count,
+		competitor_progress : data[1].followers_count - competition.competitor.initial_count,
+		you_screen_name : data[0].screen_name,
+		you_name : data[0].name,
+		you_img : data[0].profile_image_url,
+		you_statuses_count : data[0].statuses_count,
+		you_count : data[0].followers_count,
+		you_progress : data[0].followers_count - competition.you.initial_count,
+		date : moment().format('MMMM Do YYYY, hh:mm:ss')
 	};
 
+	// here pushing data in firebase
+	var postsRef = myFirebaseRef.child('state');
+
+	postsRef.set(res);
+
+	console.log('Updated on ' + moment().format('MMMM Do YYYY, hh:mm:ss'));
 });
 
 // function creating and sending the digest email
 function send_my_digest(content){
-	mailjet.sendContent('TwitterWar@sharma.fr',
+	mj.sendContent('TwitterWar@sharma.fr',
          ['shubham@sharma.fr'],
          'Twitter War - '+ moment().format('MMMM Do YYYY, hh:mm:ss'),
          content,
-         1)
+         1);
 }
 
 //Cron job which sends an email at midnight every day

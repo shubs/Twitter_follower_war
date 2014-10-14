@@ -29,16 +29,22 @@
 
   	<script>
       function update(newPost, who){
-        $("#"+who+"_img").attr("src",newPost.img);
-        $("#"+who+"_fcount").html(newPost.count);
-        $("#"+who+"_state").html("+ "+newPost.progress);
-        $("#"+who+"_id").html("@"+newPost.screen_name);
-        $("#"+who+"_statuses_count").html(newPost.statuses_count);
+        $("#you_img").attr("src",newPost.you_img);
+        $("#you_fcount").html(newPost.you_count);
+        $("#you_state").html("+ "+newPost.you_progress);
+        $("#you_id").html("@"+newPost.you_screen_name);
+        $("#you_statuses_count").html(newPost.you_statuses_count);
+        $("#you_img").attr("src",newPost.you_img);
+        $("#competitor_fcount").html(newPost.competitor_count);
+        $("#competitor_state").html("+ "+newPost.competitor_progress);
+        $("#competitor_id").html("@"+newPost.competitor_screen_name);
+        $("#competitor_statuses_count").html(newPost.competitor_statuses_count);
         console.log(newPost);
+        check_winner();
       }
 
       function check_winner(){
-        if ($("#competitor_state").val() < $("#you_state").val()) {
+        if ($("#competitor_state").html() < $("#you_state").html()) {
           $("#btn_you_state").addClass('btn-success');
           $("#btn_competitor_state").addClass('btn-danger');
         }
@@ -49,18 +55,12 @@
       }
 
       $(document).ready(function() {
-        var postsRef = new Firebase("https://twitterwar.firebaseio.com/you");
-        postsRef.on('child_added', function (snapshot) {
+        var postsRef = new Firebase("https://twitterwar.firebaseio.com/state");
+        postsRef.on('value', function (snapshot) {
           var newPost = snapshot.val();
-          update(newPost, "you");
+          console.log(newPost);
+          update(newPost);
         });
-
-        var postsRef2 = new Firebase("https://twitterwar.firebaseio.com/competitor");
-        postsRef2.on('child_added', function (snapshot) {
-          var newPost = snapshot.val();
-          update(newPost, "competitor");
-        });
-        check_winner();
 
       });
   	</script>
