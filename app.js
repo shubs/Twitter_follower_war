@@ -39,35 +39,37 @@ var myFirebaseRef = new Firebase("https://twitterwar.firebaseio.com/");
 
 var users = competition.you.account + ',' + competition.competitor.account;
 
-T.get('users/lookup', { screen_name: users },  function (err, data, response) {
+setInterval(function(){
+	T.get('users/lookup', { screen_name: users },  function (err, data, response) {
 
-	var res = {
-		competitor_screen_name : data[1].screen_name,
-		competitor_name : data[1].name,
-		competitor_img : data[1].profile_image_url,
-		competitor_count : data[1].followers_count,
-		competitor_followings : data[1].friends_count,
-		competitor_statuses_count : data[1].statuses_count,
-		competitor_progress : data[1].followers_count - competition.competitor.initial_count,
-		competitor_ratio : (data[1].statuses_count / data[1].friends_count),
-		you_screen_name : data[0].screen_name,
-		you_name : data[0].name,
-		you_img : data[0].profile_image_url,
-		you_statuses_count : data[0].statuses_count,
-		you_count : data[0].followers_count,
-		you_followings : data[0].friends_count,
-		you_progress : data[0].followers_count - competition.you.initial_count,
-		you_ratio : (data[0].statuses_count / data[0].friends_count),
-		date : moment().format('MMMM Do YYYY, hh:mm:ss')
-	};
+		var res = {
+			competitor_screen_name : data[1].screen_name,
+			competitor_name : data[1].name,
+			competitor_img : data[1].profile_image_url,
+			competitor_count : data[1].followers_count,
+			competitor_followings : data[1].friends_count,
+			competitor_statuses_count : data[1].statuses_count,
+			competitor_progress : data[1].followers_count - competition.competitor.initial_count,
+			competitor_ratio : (data[1].statuses_count / data[1].friends_count),
+			you_screen_name : data[0].screen_name,
+			you_name : data[0].name,
+			you_img : data[0].profile_image_url,
+			you_statuses_count : data[0].statuses_count,
+			you_count : data[0].followers_count,
+			you_followings : data[0].friends_count,
+			you_progress : data[0].followers_count - competition.you.initial_count,
+			you_ratio : (data[0].statuses_count / data[0].friends_count),
+			date : moment().format('MMMM Do YYYY, hh:mm:ss')
+		};
 
-	// here pushing data in firebase
-	var postsRef = myFirebaseRef.child('state');
+		// here pushing data in firebase
+		var postsRef = myFirebaseRef.child('state');
 
-	postsRef.set(res);
+		postsRef.set(res);
 
-	console.log('Updated on ' + moment().format('MMMM Do YYYY, hh:mm:ss'));
-});
+		console.log('Updated on ' + moment().format('MMMM Do YYYY, hh:mm:ss'));
+	});
+}, 2000);
 
 // function creating and sending the digest email
 function send_my_digest(content){
