@@ -77,7 +77,7 @@ function send_my_digest(content){
 //Cron job which sends an email at midnight every day
 new CronJob('0 0 * * * *', function(){
     console.log('--------> Sending digest');
-    send_my_digest("some html");
+    //send_my_digest("some html");
 }, null, true, "Europe/Paris");
 
 app.get('/', function(req, res){
