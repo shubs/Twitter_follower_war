@@ -26,7 +26,7 @@
 
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <script src="https://cdn.firebase.com/js/client/1.1.1/firebase.js"></script>
-
+    <script src="http://www.chartjs.org/assets/Chart.min.js"></script>
   	<script>
       function update(newPost, who){
         $("#you_img").attr("src",newPost.you_img);
@@ -41,6 +41,152 @@
         $("#competitor_statuses_count").html(newPost.competitor_statuses_count);
         console.log(newPost);
         check_winner();
+        window.ctx1 = document.getElementById("followers").getContext("2d");
+        window.ctx2 = document.getElementById("followings").getContext("2d");
+        window.ctx3 = document.getElementById("state").getContext("2d");
+        window.ctx4 = document.getElementById("tweets").getContext("2d");
+        window.ctx5 = document.getElementById("ratio").getContext("2d");
+        var options = {
+            //Boolean - Whether the scale should start at zero, or an order of magnitude down from the lowest value
+            scaleBeginAtZero : true,
+
+            //Boolean - Whether grid lines are shown across the chart
+            scaleShowGridLines : true,
+
+            //String - Colour of the grid lines
+            scaleGridLineColor : "rgba(0,0,0,.05)",
+
+            //Number - Width of the grid lines
+            scaleGridLineWidth : 1,
+
+            //Boolean - If there is a stroke on each bar
+            barShowStroke : true,
+
+            //Number - Pixel width of the bar stroke
+            barStrokeWidth : 2,
+
+            //Number - Spacing between each of the X value sets
+            barValueSpacing : 5,
+
+            //Number - Spacing between data sets within X values
+            barDatasetSpacing : 1,
+
+            //String - A legend template
+            legendTemplate : "<ul class=\"<%=name.toLowerCase()%>-legend\"><% for (var i=0; i<datasets.length; i++){%><li><span style=\"background-color:<%=datasets[i].lineColor%>\"></span><%if(datasets[i].label){%><%=datasets[i].label%><%}%></li><%}%></ul>"
+
+        };
+        var data1 = {
+            labels: ["Followers"],
+            datasets: [
+                {
+                    label: newPost.you_screen_name,
+                    fillColor: "rgba(220,220,220,0.5)",
+                    strokeColor: "rgba(220,220,220,0.8)",
+                    highlightFill: "rgba(220,220,220,0.75)",
+                    highlightStroke: "rgba(220,220,220,1)",
+                    data: [newPost.you_count]
+                },
+                {
+                    label: newPost.competitor_screen_name,
+                    fillColor: "rgba(151,187,205,0.5)",
+                    strokeColor: "rgba(151,187,205,0.8)",
+                    highlightFill: "rgba(151,187,205,0.75)",
+                    highlightStroke: "rgba(151,187,205,1)",
+                    data: [newPost.competitor_count]
+                }
+            ]
+        };
+        var data2 = {
+            labels: ["followings"],
+            datasets: [
+                {
+                    label: newPost.you_screen_name,
+                    fillColor: "rgba(220,220,220,0.5)",
+                    strokeColor: "rgba(220,220,220,0.8)",
+                    highlightFill: "rgba(220,220,220,0.75)",
+                    highlightStroke: "rgba(220,220,220,1)",
+                    data: [newPost.you_followings]
+                },
+                {
+                    label: newPost.competitor_screen_name,
+                    fillColor: "rgba(151,187,205,0.5)",
+                    strokeColor: "rgba(151,187,205,0.8)",
+                    highlightFill: "rgba(151,187,205,0.75)",
+                    highlightStroke: "rgba(151,187,205,1)",
+                    data: [newPost.competitor_followings]
+                }
+            ]
+        };
+        var data3 = {
+            labels: ["state"],
+            datasets: [
+                {
+                    label: newPost.you_screen_name,
+                    fillColor: "rgba(50,205,50,0.5)",
+                    strokeColor: "rgba(50,205,50,0.8)",
+                    highlightFill: "rgba(50,205,50,0.75)",
+                    highlightStroke: "rgba(50,205,50,1)",
+                    data: [newPost.you_progress]
+                },
+                {
+                    label: newPost.competitor_screen_name,
+                    fillColor: "rgba(0,100,0,0.5)",
+                    strokeColor: "rgba(0,100,0,0.8)",
+                    highlightFill: "rgba(0,100,0,0.75)",
+                    highlightStroke: "rgba(0,100,0,1)",
+                    data: [newPost.competitor_progress]
+                }
+            ]
+        };
+        var data4 = {
+            labels: ["tweets"],
+            datasets: [
+                {
+                    label: newPost.you_screen_name,
+                    fillColor: "rgba(220,220,220,0.5)",
+                    strokeColor: "rgba(220,220,220,0.8)",
+                    highlightFill: "rgba(220,220,220,0.75)",
+                    highlightStroke: "rgba(220,220,220,1)",
+                    data: [newPost.you_statuses_count]
+                },
+                {
+                    label: newPost.competitor_screen_name,
+                    fillColor: "rgba(151,187,205,0.5)",
+                    strokeColor: "rgba(151,187,205,0.8)",
+                    highlightFill: "rgba(151,187,205,0.75)",
+                    highlightStroke: "rgba(151,187,205,1)",
+                    data: [newPost.competitor_statuses_count]
+                }
+            ]
+        };
+        var data5 = {
+            labels: ["ratio"],
+            datasets: [
+                {
+                    label: newPost.you_screen_name,
+                    fillColor: "rgba(220,220,220,0.5)",
+                    strokeColor: "rgba(220,220,220,0.8)",
+                    highlightFill: "rgba(220,220,220,0.75)",
+                    highlightStroke: "rgba(220,220,220,1)",
+                    data: [newPost.you_ratio]
+                },
+                {
+                    label: newPost.competitor_screen_name,
+                    fillColor: "rgba(151,187,205,0.5)",
+                    strokeColor: "rgba(151,187,205,0.8)",
+                    highlightFill: "rgba(151,187,205,0.75)",
+                    highlightStroke: "rgba(151,187,205,1)",
+                    data: [newPost.competitor_ratio]
+                }
+            ]
+        };
+
+        var myBarChart1 = new Chart(ctx1).Bar(data1, options);
+        var myBarChart2 = new Chart(ctx2).Bar(data2, options);
+        var myBarChart3 = new Chart(ctx3).Bar(data3, options);
+        var myBarChart4 = new Chart(ctx4).Bar(data4, options);
+        var myBarChart5 = new Chart(ctx5).Bar(data5, options);
+        
       }
 
       function check_winner(){
@@ -62,31 +208,13 @@
           update(newPost);
         });
 
+ 
+
       });
+
   	</script>
   </head>
 <body>
-
-    <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-      <div class="container">
-        <div class="navbar-header">
-          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".navbar-collapse">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-          <a class="navbar-brand" href="#">Project name</a>
-        </div>
-        <div class="collapse navbar-collapse">
-          <ul class="nav navbar-nav">
-            <li class="active"><a href="#">Home</a></li>
-            <li><a href="#about">About</a></li>
-            <li><a href="#contact">Contact</a></li>
-          </ul>
-        </div><!--/.nav-collapse -->
-      </div>
-    </div>
 
     <div class="container">
 
@@ -108,6 +236,16 @@
             <button id="btn_competitor_statuses_count" type="button" class="btn">Nb tweets : <span id="competitor_statuses_count">__</span></button>
             <button id="btn_competitor_count" type="button" class="btn">Followers : <span id="competitor_fcount">__</span></button>
             <button id="btn_competitor_state" type="button" class="btn">State : <span id="competitor_state">__</span></button>
+          </div>
+        </div>
+        <hr>
+        <div id="row">
+          <div id="col-md-12">
+              <canvas id="followers" width="200" height="250"></canvas>
+              <canvas id="followings" width="200" height="250"></canvas>
+              <canvas id="state" width="200" height="250"></canvas>
+              <canvas id="tweets" width="200" height="250"></canvas>
+              <canvas id="ratio" width="200" height="250"></canvas>
           </div>
         </div>
       </div>
