@@ -69,7 +69,7 @@ setInterval(function(){
 
 		console.log('Updated on ' + moment().format('MMMM Do YYYY, hh:mm:ss'));
 	});
-}, 2000);
+}, 15000);
 
 // function creating and sending the digest email
 function send_my_digest(content){
