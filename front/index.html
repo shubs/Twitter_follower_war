@@ -39,7 +39,7 @@
         $("#competitor_state").html("+ "+newPost.competitor_progress);
         $("#competitor_id").html("@"+newPost.competitor_screen_name);
         $("#competitor_statuses_count").html(newPost.competitor_statuses_count);
-        $("#gap").html(newPost.competitor_progress - newPost.you_progress);
+        $("#gap").html(-newPost.competitor_progress + newPost.you_progress);
         console.log(newPost);
         check_winner();
         window.ctx1 = document.getElementById("followers").getContext("2d");
