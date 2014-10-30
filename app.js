@@ -20,12 +20,9 @@ var mj = new Mailjet(credentials.mailjet.apikey, credentials.mailjet.apikeysecre
 //     twitter = require('twitter');
 // var twit = new twitter(credentials.twitter);
 var Twit = require('twit');
-var T = new Twit({
-		consumer_key: 'BsbTj5MCLeTaUFATZrRlVmmSj',
-		consumer_secret: 'ygf8eXWlQrWLigkOJAG7lFc1QkgTGU7Wwoh4ZJxYABrSprLyl1',
-		access_token: '39555082-JIlybB8E7KOG5RIXfSrEmpmIzV417lDK8CdTqvBw1',
-		access_token_secret: 'TIFGj8ZeZQLxFikdmAxtOuSV5uptYCHjtf8hkCHxwkK6b'
-});
+var T =  new Twit(credentials.twitter);
+};
+
 //
 //  tweet 'hello world!'
 //
