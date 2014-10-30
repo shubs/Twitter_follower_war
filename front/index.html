@@ -39,6 +39,7 @@
         $("#competitor_state").html("+ "+newPost.competitor_progress);
         $("#competitor_id").html("@"+newPost.competitor_screen_name);
         $("#competitor_statuses_count").html(newPost.competitor_statuses_count);
+        $("#gap").html(newPost.competitor_progress - newPost.you_progress);
         console.log(newPost);
         check_winner();
         window.ctx1 = document.getElementById("followers").getContext("2d");
@@ -238,6 +239,12 @@
             <button id="btn_competitor_state" type="button" class="btn">State : <span id="competitor_state">__</span></button>
           </div>
         </div>
+        <hr>
+        <h1>
+            <span class="label label-info">
+                Quid : <span id="gap"></span>
+            </span>
+        </h1>
         <hr>
         <div id="row">
           <div id="col-md-12">
