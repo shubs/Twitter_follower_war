@@ -21,7 +21,6 @@ var mj = new Mailjet(credentials.mailjet.apikey, credentials.mailjet.apikeysecre
 // var twit = new twitter(credentials.twitter);
 var Twit = require('twit');
 var T =  new Twit(credentials.twitter);
-};
 
 //
 //  tweet 'hello world!'
